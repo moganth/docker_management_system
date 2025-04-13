@@ -14,37 +14,29 @@ def docker_login(username: str, password: str):
     except APIError as e:
         return {"error": str(e)}
 
-
-# Build Image
-def build_image(dockerfile_path: str, image_name: str):
-    try:
-        image, build_logs = client.images.build(path=dockerfile_path, tag=image_name)
-        return {"status": "success", "image_id": str(image.id), "message": "Image built successfully"}
-    except APIError as e:
-        return {"error": str(e)}
-
-
 # Push Image to Docker Hub
-def push_image(image_name: str, repository_name: str):
+def build_image(dockerfile_path: str, image_name: str, dockerfile_name: str = "Dockerfile"):
     try:
-        # Tag the image with the provided Docker Hub repository
-        tagged_image = client.images.get(image_name)
-        tagged_image.tag(repository_name, tag="latest")
+        image, logs = client.images.build(
+            path=dockerfile_path,
+            tag=image_name,
+            dockerfile=dockerfile_name,
+            rm=True
+        )
+        log_output = ""
+        for chunk in logs:
+            if 'stream' in chunk:
+                log_output += chunk['stream']
+        return f"Image '{image_name}' built successfully.\nLogs:\n{log_output}"
+    except Exception as e:
+        raise Exception(f"Build failed: {e}")
 
-        # Push the image to Docker Hub
-        push_response = client.images.push(repository_name, tag="latest")
-        return {"status": "success", "message": "Image pushed to Docker Hub", "response": push_response}
-    except APIError as e:
-        return {"error": str(e)}
-
-
-# Pull Image
-def pull_image(image_name: str):
+def push_image(image_name: str):
     try:
-        result = client.images.pull(image_name)
-        return JSONResponse(content={"status": "success", "image": str(result)})
-    except APIError as e:
-        return {"error": str(e)}
+        response = client.images.push(image_name)
+        return f"Image '{image_name}' pushed to Docker Hub.\nResponse:\n{response}"
+    except Exception as e:
+        raise Exception(f"Push failed: {e}")
 
 
 # List Images

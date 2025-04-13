@@ -18,3 +18,11 @@ class DockerImageSchema(BaseModel):
     image_name: str
     repository_name: str  # Docker Hub repository name (e.g., username/repository)
 
+class BuildImagePayload(BaseModel):
+    image_name: str
+    dockerfile_path: str
+    dockerfile_name: str = "Dockerfile"
+
+class PushImagePayload(BaseModel):
+    image_name: str
+
