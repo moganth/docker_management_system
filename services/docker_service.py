@@ -1,5 +1,7 @@
 import docker
 from docker.errors import APIError
+from fastapi.responses import JSONResponse
+
 from config import DOCKER_REGISTRY
 
 client = docker.from_env()
@@ -13,7 +15,9 @@ def docker_login(username: str, password: str):
 
 # Image Operations
 def pull_image(image_name: str):
-    return client.images.pull(image_name)
+    result = client.images.pull(image_name)
+    return JSONResponse(content={"status": "success", "image": str(result)})
+
 
 def push_image(image_name: str):
     image = client.images.get(image_name)
