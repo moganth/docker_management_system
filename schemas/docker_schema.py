@@ -13,3 +13,8 @@ class VolumeSchema(BaseModel):
 class DockerLoginSchema(BaseModel):
     username: str
     password: str
+
+class DockerImageSchema(BaseModel):
+    image_name: str
+    repository_name: str  # Docker Hub repository name (e.g., username/repository)
+
