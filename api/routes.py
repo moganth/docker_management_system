@@ -1,5 +1,4 @@
-from http.client import HTTPException
-
+from fastapi import HTTPException
 from fastapi import APIRouter
 from services import docker_service as ds
 from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload

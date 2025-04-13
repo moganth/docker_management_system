@@ -38,6 +38,13 @@ def push_image(image_name: str):
     except Exception as e:
         raise Exception(f"Push failed: {e}")
 
+def pull_image(image_name: str):
+    try:
+        image = client.images.pull(image_name)
+        return {"status": "success", "message": f"Image '{image_name}' pulled successfully"}
+    except APIError as e:
+        return {"error": str(e)}
+
 
 # List Images
 def list_images():
@@ -51,3 +58,26 @@ def delete_image(image_name: str):
         return {"status": "success", "message": f"Image {image_name} removed"}
     except APIError as e:
         return {"error": str(e)}
+
+def get_logs(container_name: str):
+    try:
+        container = client.containers.get(container_name)
+        logs = container.logs().decode('utf-8')
+        return {"container": container_name, "logs": logs}
+    except Exception as e:
+        raise Exception(f"Failed to get logs for container '{container_name}': {e}")
+
+def docker_ps():
+    try:
+        containers = client.containers.list()
+        result = []
+        for container in containers:
+            result.append({
+                "id": container.id,
+                "name": container.name,
+                "status": container.status,
+                "image": container.image.tags
+            })
+        return result
+    except Exception as e:
+        raise Exception(f"Failed to list containers: {e}")
