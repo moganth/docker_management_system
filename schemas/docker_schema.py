@@ -25,4 +25,6 @@ class BuildImagePayload(BaseModel):
 
 class PushImagePayload(BaseModel):
     image_name: str
+    username: str
+    password: str
 

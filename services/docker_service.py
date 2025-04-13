@@ -31,8 +31,12 @@ def build_image(dockerfile_path: str, image_name: str, dockerfile_name: str = "D
     except Exception as e:
         raise Exception(f"Build failed: {e}")
 
-def push_image(image_name: str):
+def push_image(image_name: str, username: str, password: str):
     try:
+        # Login to Docker Hub
+        client.login(username=username, password=password)
+
+        # Push the image
         response = client.images.push(image_name)
         return f"Image '{image_name}' pushed to Docker Hub.\nResponse:\n{response}"
     except Exception as e:

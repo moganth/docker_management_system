@@ -1,8 +1,10 @@
+import docker
 from fastapi import HTTPException
 from fastapi import APIRouter
 from services import docker_service as ds
 from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload
 
+client = docker.from_env()
 router = APIRouter()
 
 
@@ -27,7 +29,11 @@ def build_image(payload: BuildImagePayload):
 @router.post("/docker/push")
 def push_image(payload: PushImagePayload):
     try:
-        push_response = ds.push_image(payload.image_name)
+        push_response = ds.push_image(
+            image_name=payload.image_name,
+            username=payload.username,
+            password=payload.password
+        )
         return {"message": push_response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
