@@ -47,12 +47,14 @@ def push_image(local_image_name: str, repository_name: str, username: str, passw
         raise Exception(f"Push failed: {e}")
 
 
-def pull_image(image_name: str):
+def pull_image(image_name: str, repository_name: str):
     try:
-        image = client.images.pull(image_name)
-        return {"status": "success", "message": f"Image '{image_name}' pulled successfully"}
+        full_image_name = f"{repository_name}:{image_name.split(':')[-1]}"
+        image = client.images.pull(full_image_name)
+        return {"status": "success", "message": f"Image '{full_image_name}' pulled successfully"}
     except APIError as e:
         return {"error": str(e)}
+
 
 
 # List Images

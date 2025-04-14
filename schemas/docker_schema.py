@@ -29,4 +29,7 @@ class PushImagePayload(BaseModel):
     username: str
     password: str
 
+class PullImagePayload(BaseModel):
+    image_name: str
+    repository_name: str
 
