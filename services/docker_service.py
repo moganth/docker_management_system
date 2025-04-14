@@ -1,12 +1,9 @@
 import docker
 from docker.errors import APIError
-from fastapi.responses import JSONResponse
 from config import DOCKER_REGISTRY
 
 client = docker.from_env()
 
-
-# Docker Login
 def docker_login(username: str, password: str):
     try:
         login_response = client.login(username=username, password=password, registry=DOCKER_REGISTRY)
@@ -14,7 +11,6 @@ def docker_login(username: str, password: str):
     except APIError as e:
         return {"error": str(e)}
 
-# Push Image to Docker Hub
 def build_image(dockerfile_path: str, image_name: str, dockerfile_name: str = "Dockerfile"):
     try:
         image, logs = client.images.build(
@@ -46,7 +42,6 @@ def push_image(local_image_name: str, repository_name: str, username: str, passw
     except Exception as e:
         raise Exception(f"Push failed: {e}")
 
-
 def pull_image(image_name: str, repository_name: str):
     try:
         full_image_name = f"{repository_name}:{image_name.split(':')[-1]}"
@@ -55,9 +50,6 @@ def pull_image(image_name: str, repository_name: str):
     except APIError as e:
         return {"error": str(e)}
 
-
-
-# List Images
 def list_images():
     images = client.images.list()
     image_list = []
@@ -69,7 +61,6 @@ def list_images():
         })
     return image_list
 
-# Delete Image
 def delete_image(image_name: str):
     try:
         # Optional: validate image exists
@@ -80,7 +71,6 @@ def delete_image(image_name: str):
         return {"error": f"Image {image_name} not found"}
     except APIError as e:
         return {"error": str(e)}
-
 
 def get_logs(container_name: str):
     try:
@@ -105,7 +95,6 @@ def docker_ps():
     except Exception as e:
         raise Exception(f"Failed to list containers: {e}")
 
-# New Functions for Container Operations
 def run_container(image_name: str, container_name: str, ports: dict = None, environment: dict = None, volumes: dict = None):
     try:
         container = client.containers.run(
@@ -119,7 +108,6 @@ def run_container(image_name: str, container_name: str, ports: dict = None, envi
         return {"status": "success", "message": f"Container '{container_name}' started successfully", "container_id": container.id}
     except Exception as e:
         return {"error": str(e)}
-
 
 def stop_container(container_name: str):
     try:
@@ -153,7 +141,6 @@ def remove_container(container_name: str):
     except Exception as e:
         return {"error": str(e)}
 
-# Create Docker Volume
 def create_volume(volume_name: str):
     try:
         volume = client.volumes.create(name=volume_name)
@@ -161,7 +148,6 @@ def create_volume(volume_name: str):
     except Exception as e:
         return {"error": str(e)}
 
-# List Docker Volumes
 def list_volumes():
     try:
         volumes = client.volumes.list()
@@ -169,7 +155,6 @@ def list_volumes():
     except Exception as e:
         return {"error": str(e)}
 
-# Delete Docker Volume
 def delete_volume(volume_name: str):
     try:
         volume = client.volumes.get(volume_name)

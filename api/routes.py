@@ -7,12 +7,9 @@ from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildIma
 client = docker.from_env()
 router = APIRouter()
 
-
-# Docker Hub Login
 @router.post("/login")
 def login_to_docker(payload: DockerLoginSchema):
     return ds.docker_login(payload.username, payload.password)
-
 
 @router.post("/docker/build")
 def build_image(payload: BuildImagePayload):
@@ -39,8 +36,6 @@ def push_image(payload: PushImagePayload):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# Image Endpoints
 @router.post("/pull")
 def pull_image(payload: PullImagePayload):
     try:
@@ -92,11 +87,9 @@ def remove_container(payload: ContainerRunRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Logs & Docker PS
 @router.get("/logs/{container_name}")
 def get_logs(container_name: str):
     return ds.get_logs(container_name)
-
 
 @router.get("/ps")
 def docker_ps():

@@ -22,19 +22,14 @@ class BuildImagePayload(BaseModel):
     dockerfile_name: str = "Dockerfile"
 
 class PushImagePayload(BaseModel):
-    local_image_name: str  # local name like 'image1'
-    repository_name: str = "moganthkumar/moganth"  # target like 'moganthkumar/moganth'
+    local_image_name: str
+    repository_name: str = "moganthkumar/moganth"
     username: str = "moganthkumar"
     password: str = "7010690656@Mk"
 
 class PullImagePayload(BaseModel):
     image_name: str
     repository_name: str
-
-# class ContainerOperationPayload(BaseModel):
-#     image_name: str
-#     container_name: str
-#     ports: Optional[Dict[str, str]] = None
 
 class ContainerRunRequest(BaseModel):
     image_name: str
