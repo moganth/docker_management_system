@@ -41,10 +41,10 @@ class ContainerRunRequest(BaseModel):
     container_name: str
     ports: Optional[Dict[str, str]] = None
     environment: Optional[Dict[str, str]] = None
-    # volume_name: Optional[str] = None
-    # mount_path: Optional[str] = None
+    volume_name: Optional[str] = None
+    mount_path: Optional[str] = None
     # environment: Optional[Dict[str, str]] = None # Example: {"80": "8080"}
-    volumes: Optional[Dict[str, Dict[str, str]]] = None  # Example: {"/host": {"bind": "/container", "mode": "rw"}}
+    # volumes: Optional[Dict[str, Dict[str, str]]] = None  # Example: {"/host": {"bind": "/container", "mode": "rw"}}
 
 class VolumeSchema(BaseModel):
     volume_name: str
