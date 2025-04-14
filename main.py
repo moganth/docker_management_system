@@ -2,9 +2,15 @@ from fastapi import FastAPI
 from api.routes import router
 import uvicorn
 
-app = FastAPI(title="Docker Management System")
+app = FastAPI(openapi_url="/api/openapi.json",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
+)
+app.include_router(router, prefix="/api")
 
-app.include_router(router, prefix="/docker")
+@app.get("/api/home")
+async def root():
+    return {"message": "API Home"}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

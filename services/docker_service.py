@@ -63,7 +63,6 @@ def list_images():
 
 def delete_image(image_name: str):
     try:
-        # Optional: validate image exists
         client.images.get(image_name)
         client.images.remove(image_name, force=True)
         return {"status": "success", "message": f"Image {image_name} removed"}
