@@ -48,17 +48,13 @@ def pull_image(payload: PullImagePayload):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-
 @router.get("/images")
-def get_images():
+def list_all_images():
     return ds.list_images()
-
 
 @router.delete("/images")
 def remove_image(payload: DockerImageSchema):
     return ds.delete_image(payload.image_name)
-
 
 # Logs & Docker PS
 @router.get("/logs/{container_name}")

@@ -59,7 +59,15 @@ def pull_image(image_name: str, repository_name: str):
 
 # List Images
 def list_images():
-    return client.images.list()
+    images = client.images.list()
+    image_list = []
+    for img in images:
+        image_list.append({
+            "id": img.id,
+            "tags": img.tags,
+            "short_id": img.short_id
+        })
+    return image_list
 
 
 # Delete Image
