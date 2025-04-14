@@ -14,7 +14,7 @@ class DockerLoginSchema(BaseModel):
 
 class DockerImageSchema(BaseModel):
     image_name: str
-    repository_name: str  # Docker Hub repository name (e.g., username/repository)
+    repository_name: str = "moganthkumar/moganth" # Docker Hub repository name (e.g., username/repository)
 
 class BuildImagePayload(BaseModel):
     image_name: str
