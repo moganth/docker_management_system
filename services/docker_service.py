@@ -106,12 +106,20 @@ def docker_ps():
         raise Exception(f"Failed to list containers: {e}")
 
 # New Functions for Container Operations
-def run_container(image_name: str, container_name: str, ports: dict = None, environment: dict = None):
+def run_container(image_name: str, container_name: str, ports: dict = None, environment: dict = None, volumes: dict = None):
     try:
-        container = client.containers.run(image_name, name=container_name, ports=ports, environment=environment, detach=True)
+        container = client.containers.run(
+            image_name,
+            name=container_name,
+            ports=ports,
+            environment=environment,
+            volumes=volumes,  # Format: {"/host/path": {"bind": "/container/path", "mode": "rw"}}
+            detach=True
+        )
         return {"status": "success", "message": f"Container '{container_name}' started successfully", "container_id": container.id}
     except Exception as e:
         return {"error": str(e)}
+
 
 def stop_container(container_name: str):
     try:
@@ -142,5 +150,30 @@ def remove_container(container_name: str):
         container = client.containers.get(container_name)
         container.remove()
         return {"status": "success", "message": f"Container '{container_name}' removed"}
+    except Exception as e:
+        return {"error": str(e)}
+
+# Create Docker Volume
+def create_volume(volume_name: str):
+    try:
+        volume = client.volumes.create(name=volume_name)
+        return {"status": "success", "message": f"Volume '{volume_name}' created", "volume_id": volume.id}
+    except Exception as e:
+        return {"error": str(e)}
+
+# List Docker Volumes
+def list_volumes():
+    try:
+        volumes = client.volumes.list()
+        return [{"name": v.name, "driver": v.attrs.get("Driver")} for v in volumes]
+    except Exception as e:
+        return {"error": str(e)}
+
+# Delete Docker Volume
+def delete_volume(volume_name: str):
+    try:
+        volume = client.volumes.get(volume_name)
+        volume.remove()
+        return {"status": "success", "message": f"Volume '{volume_name}' deleted"}
     except Exception as e:
         return {"error": str(e)}

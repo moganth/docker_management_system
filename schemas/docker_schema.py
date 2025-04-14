@@ -8,9 +8,6 @@ class ContainerSchema(BaseModel):
     image_name: str
     container_name: str
 
-class VolumeSchema(BaseModel):
-    volume_name: str
-
 class DockerLoginSchema(BaseModel):
     username: str
     password: str
@@ -26,7 +23,7 @@ class BuildImagePayload(BaseModel):
 
 class PushImagePayload(BaseModel):
     local_image_name: str  # local name like 'image1'
-    repository_name: str   # target like 'moganthkumar/moganth'
+    repository_name: str = "moganthkumar/moganth"  # target like 'moganthkumar/moganth'
     username: str
     password: str
 
@@ -37,6 +34,9 @@ class PullImagePayload(BaseModel):
 class ContainerOperationPayload(BaseModel):
     image_name: str
     container_name: str
-    ports: Optional[Dict[str, str]] = None  # Example: {"80": "8080"}
-    environment: Optional[Dict[str, str]] = None  # Example: {"ENV_VAR": "value"}
+    ports: Optional[Dict[str, str]] = None
+    environment: Optional[Dict[str, str]] = None # Example: {"80": "8080"}
+    volumes: Optional[Dict[str, Dict[str, str]]] = None  # Example: {"/host": {"bind": "/container", "mode": "rw"}}
 
+class VolumeSchema(BaseModel):
+    volume_name: str

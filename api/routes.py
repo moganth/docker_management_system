@@ -2,7 +2,7 @@ import docker
 from fastapi import HTTPException
 from fastapi import APIRouter
 from services import docker_service as ds
-from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload, PullImagePayload, ContainerOperationPayload
+from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload, PullImagePayload, ContainerOperationPayload, VolumeSchema
 
 client = docker.from_env()
 router = APIRouter()
@@ -101,3 +101,15 @@ def get_logs(container_name: str):
 @router.get("/ps")
 def docker_ps():
     return ds.docker_ps()
+
+@router.post("/volume/create")
+def create_docker_volume(payload: VolumeSchema):
+    return ds.create_volume(payload.volume_name)
+
+@router.get("/volumes")
+def list_docker_volumes():
+    return ds.list_volumes()
+
+@router.delete("/volume/delete")
+def delete_docker_volume(volume_name: str):
+    return ds.delete_volume(volume_name)
