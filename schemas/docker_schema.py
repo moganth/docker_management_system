@@ -24,7 +24,9 @@ class BuildImagePayload(BaseModel):
     dockerfile_name: str = "Dockerfile"
 
 class PushImagePayload(BaseModel):
-    image_name: str
+    local_image_name: str  # local name like 'image1'
+    repository_name: str   # target like 'moganthkumar/moganth'
     username: str
     password: str
+
 

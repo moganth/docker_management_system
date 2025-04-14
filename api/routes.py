@@ -26,17 +26,21 @@ def build_image(payload: BuildImagePayload):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/docker/push")
-def push_image(payload: PushImagePayload):
+def push_image(local_image_name: str, repository_name: str, username: str, password: str):
     try:
-        push_response = ds.push_image(
-            image_name=payload.image_name,
-            username=payload.username,
-            password=payload.password
-        )
-        return {"message": push_response}
+        # Login to Docker Hub
+        client.login(username=username, password=password)
+
+        # Tag the local image with the Docker Hub repository name
+        image = client.images.get(local_image_name)
+        image.tag(repository_name)
+
+        # Push the image to Docker Hub
+        response = client.images.push(repository_name)
+        return f"Image '{local_image_name}' pushed as '{repository_name}' to Docker Hub.\nResponse:\n{response}"
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise Exception(f"Push failed: {e}")
+
 
 
 # Image Endpoints

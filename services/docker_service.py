@@ -31,16 +31,21 @@ def build_image(dockerfile_path: str, image_name: str, dockerfile_name: str = "D
     except Exception as e:
         raise Exception(f"Build failed: {e}")
 
-def push_image(image_name: str, username: str, password: str):
+def push_image(local_image_name: str, repository_name: str, username: str, password: str):
     try:
         # Login to Docker Hub
         client.login(username=username, password=password)
 
-        # Push the image
-        response = client.images.push(image_name)
-        return f"Image '{image_name}' pushed to Docker Hub.\nResponse:\n{response}"
+        # Tag the local image with the Docker Hub repository name
+        image = client.images.get(local_image_name)
+        image.tag(repository_name)
+
+        # Push the image to Docker Hub
+        response = client.images.push(repository_name)
+        return f"Image '{local_image_name}' pushed as '{repository_name}' to Docker Hub.\nResponse:\n{response}"
     except Exception as e:
         raise Exception(f"Push failed: {e}")
+
 
 def pull_image(image_name: str):
     try:
