@@ -104,3 +104,43 @@ def docker_ps():
         return result
     except Exception as e:
         raise Exception(f"Failed to list containers: {e}")
+
+# New Functions for Container Operations
+def run_container(image_name: str, container_name: str, ports: dict = None, environment: dict = None):
+    try:
+        container = client.containers.run(image_name, name=container_name, ports=ports, environment=environment, detach=True)
+        return {"status": "success", "message": f"Container '{container_name}' started successfully", "container_id": container.id}
+    except Exception as e:
+        return {"error": str(e)}
+
+def stop_container(container_name: str):
+    try:
+        container = client.containers.get(container_name)
+        container.stop()
+        return {"status": "success", "message": f"Container '{container_name}' stopped"}
+    except Exception as e:
+        return {"error": str(e)}
+
+def start_container(container_name: str):
+    try:
+        container = client.containers.get(container_name)
+        container.start()
+        return {"status": "success", "message": f"Container '{container_name}' started"}
+    except Exception as e:
+        return {"error": str(e)}
+
+def restart_container(container_name: str):
+    try:
+        container = client.containers.get(container_name)
+        container.restart()
+        return {"status": "success", "message": f"Container '{container_name}' restarted"}
+    except Exception as e:
+        return {"error": str(e)}
+
+def remove_container(container_name: str):
+    try:
+        container = client.containers.get(container_name)
+        container.remove()
+        return {"status": "success", "message": f"Container '{container_name}' removed"}
+    except Exception as e:
+        return {"error": str(e)}

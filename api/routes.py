@@ -2,7 +2,7 @@ import docker
 from fastapi import HTTPException
 from fastapi import APIRouter
 from services import docker_service as ds
-from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload, PullImagePayload
+from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload, PullImagePayload, ContainerOperationPayload
 
 client = docker.from_env()
 router = APIRouter()
@@ -55,6 +55,42 @@ def list_all_images():
 @router.delete("/images")
 def remove_image(image_name: str):
     return ds.delete_image(image_name)
+
+# Container Endpoints
+@router.post("/container/run")
+def run_container(payload: ContainerOperationPayload):
+    try:
+        return ds.run_container(payload.image_name, payload.container_name, payload.ports, payload.environment)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/container/stop")
+def stop_container(payload: ContainerOperationPayload):
+    try:
+        return ds.stop_container(payload.container_name)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/container/start")
+def start_container(payload: ContainerOperationPayload):
+    try:
+        return ds.start_container(payload.container_name)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/container/restart")
+def restart_container(payload: ContainerOperationPayload):
+    try:
+        return ds.restart_container(payload.container_name)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/container/remove")
+def remove_container(payload: ContainerOperationPayload):
+    try:
+        return ds.remove_container(payload.container_name)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Logs & Docker PS
 @router.get("/logs/{container_name}")

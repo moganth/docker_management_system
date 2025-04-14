@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional, Dict
 
 class ImageSchema(BaseModel):
     image_name: str
@@ -32,4 +33,10 @@ class PushImagePayload(BaseModel):
 class PullImagePayload(BaseModel):
     image_name: str
     repository_name: str
+
+class ContainerOperationPayload(BaseModel):
+    image_name: str
+    container_name: str
+    ports: Optional[Dict[str, str]] = None  # Example: {"80": "8080"}
+    environment: Optional[Dict[str, str]] = None  # Example: {"ENV_VAR": "value"}
 
