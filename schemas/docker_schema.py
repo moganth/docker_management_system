@@ -4,6 +4,11 @@ from typing import Optional, Dict
 class ImageSchema(BaseModel):
     image_name: str
 
+class BuildRequest(BaseModel):
+    github_url: str
+    image_name: str
+    repo_name: str
+
 class ContainerSchema(BaseModel):
     image_name: str
     container_name: str

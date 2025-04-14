@@ -2,7 +2,8 @@ import docker
 from fastapi import HTTPException
 from fastapi import APIRouter
 from services import docker_service as ds
-from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload, PullImagePayload, ContainerRunRequest, VolumeSchema
+from schemas.docker_schema import DockerImageSchema, DockerLoginSchema, BuildImagePayload, PushImagePayload, PullImagePayload, ContainerRunRequest, VolumeSchema, BuildRequest
+from services.docker_service import build_image_from_repo
 
 client = docker.from_env()
 router = APIRouter()
@@ -10,6 +11,14 @@ router = APIRouter()
 @router.post("/login")
 def login_to_docker(payload: DockerLoginSchema):
     return ds.docker_login(payload.username, payload.password)
+
+# Build Docker image from a GitHub repository
+@router.post("/docker/build from github repo")
+def build_image(request: BuildRequest):
+    github_url = request.github_url
+    image_name = request.image_name
+    repo_name = request.repo_name
+    return build_image_from_repo(github_url, image_name, repo_name)
 
 @router.post("/docker/build")
 def build_image(payload: BuildImagePayload):
