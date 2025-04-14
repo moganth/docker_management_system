@@ -69,14 +69,18 @@ def list_images():
         })
     return image_list
 
-
 # Delete Image
 def delete_image(image_name: str):
     try:
+        # Optional: validate image exists
+        client.images.get(image_name)
         client.images.remove(image_name, force=True)
         return {"status": "success", "message": f"Image {image_name} removed"}
+    except docker.errors.ImageNotFound:
+        return {"error": f"Image {image_name} not found"}
     except APIError as e:
         return {"error": str(e)}
+
 
 def get_logs(container_name: str):
     try:

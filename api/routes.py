@@ -53,8 +53,8 @@ def list_all_images():
     return ds.list_images()
 
 @router.delete("/images")
-def remove_image(payload: DockerImageSchema):
-    return ds.delete_image(payload.image_name)
+def remove_image(image_name: str):
+    return ds.delete_image(image_name)
 
 # Logs & Docker PS
 @router.get("/logs/{container_name}")
